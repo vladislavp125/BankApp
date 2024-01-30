@@ -72,78 +72,101 @@ def operation_user():
 
 
 def create_user():
-    name = input('Введите ФИО: ')
-    age = int(input('Введите год рождения: '))
-    print('Создан аккаунт: ' + name + ' (' + str(year - age) + ' лет)')
-    password = input('Придумайте пароль: ')
-    print('Аккаунт успешно зарегистрирован!')
-    with open('user_data.txt', 'w', encoding='UTF-8') as file:
-        file.write('name ' + str(name) + '\n' + 'age ' + str(age) + '\n' + 'password ' + str(password))
-    return password
+    try:
+        name = input('Введите ФИО: ')
+        age = int(input('Введите год рождения: '))
+        print('Создан аккаунт: ' + name + ' (' + str(year - age) + ' лет)')
+        password = input('Придумайте пароль: ')
+        print('Аккаунт успешно зарегистрирован!')
+        with open('user_data.txt', 'w', encoding='UTF-8') as file:
+            file.write('name ' + str(name) + '\n' + 'age ' + str(age) + '\n' + 'password ' + str(password))
+        return password
+    except ValueError:
+        print()
+        print('Год рождения должен состоять только из цифр !!')
+        print()
 
 
 
 def money_up(balance):
-    cash_up = int(input('Введите сумму пополнения: '))
-    print('Счет успешно пополнен!')
-    balance += cash_up
-    with open('user_balance.txt', 'w', encoding='UTF-8') as file_user_balance:
-        file_user_balance.write('balance ' + str(balance))
-    return balance
-
+    try:
+        cash_up = int(input('Введите сумму пополнения: '))
+        print('Счет успешно пополнен!')
+        balance += cash_up
+        with open('user_balance.txt', 'w', encoding='UTF-8') as file_user_balance:
+            file_user_balance.write('balance ' + str(balance))
+        return balance
+    except ValueError:
+        print()
+        print('Чтобы пополнить баланс введите верную сумму, возможно вы пытаетесь ввести слово!')
+        print()
 
 
 def money_to_cash(balance, password):
-    user_password = input('Введите пароль: ')
-    if password == user_password:
-        cash_down = int(input('Ваш баланс: ' + str(balance) + 'руб. Введите сумму для снятия: '))
-        if cash_down > balance:
-            print('Недостаточно средств для снятия.')
-        elif cash_down <= 0:
-            print('Сумма указана некорректно, попробуйте ещё раз! ')
+    try:
+        user_password = input('Введите пароль: ')
+        if password == user_password:
+            cash_down = int(input('Ваш баланс: ' + str(balance) + 'руб. Введите сумму для снятия: '))
+            if cash_down > balance:
+                print('Недостаточно средств для снятия.')
+            elif cash_down <= 0:
+                print('Сумма указана некорректно, попробуйте ещё раз! ')
+            else:
+                balance -= cash_down
+                print('Снятие успешно завершено, ваш баланс: ' + str(balance))
         else:
-            balance -= cash_down
-            print('Снятие успешно завершено, ваш баланс: ' + str(balance))
-    else:
-        print('Неверный пароль! Попробуйте ещё раз.')
+            print('Неверный пароль! Попробуйте ещё раз.')
 
-    with open('user_balance.txt', 'w', encoding='UTF-8') as file_user_balance:
-        file_user_balance.write('balance ' + str(balance))
-    return balance
-
+        with open('user_balance.txt', 'w', encoding='UTF-8') as file_user_balance:
+            file_user_balance.write('balance ' + str(balance))
+        return balance
+    except ValueError:
+        print()
+        print('Чтобы снять денежные средства, необходимо указать верную сумму, возможно вы пытаетесь ввести слово!')
+        print()
 
 
 def check_balance(balance, password):
-    user_password = str(input('Введите пароль: '))
-    if password == user_password:
-        print('Ваш баланс: ' + str(balance))
-    else:
-            print('Неверный пароль! Попробуйте ещё раз.')
-
+    try:
+        user_password = str(input('Введите пароль: '))
+        if password == user_password:
+            print('Ваш баланс: ' + str(balance))
+        else:
+                print('Неверный пароль! Попробуйте ещё раз.')
+    except:
+        print('Непредвиденная ошибка!')
+        print()
 
 
 def transaction(transactions):
-
-    expected_amount = int(input('Введите сумму ожидаемого пополнения: '))
-    comment = str(input('Уточните пожалуйста назначение пополнения: '))
-    transactions_data[comment] = expected_amount
-    count_tran = len(transactions)
-    print('Ожидается ' + str(count_tran) + ' операций(я)')
-    string_for_copy = ''
-    with open('data_transaction.txt', encoding='UTF=8') as file_transaction:
-        for line in file_transaction:
-            string_for_copy += line
-    with open('data_transaction.txt', 'w', encoding='UTF=8') as file_transaction:
-        file_transaction.write(string_for_copy + '\n' + str(comment) + ' ' + str(expected_amount))
-    return count_tran
-
+    try:
+        expected_amount = int(input('Введите сумму ожидаемого пополнения: '))
+        comment = str(input('Уточните пожалуйста назначение пополнения: '))
+        transactions_data[comment] = expected_amount
+        count_tran = len(transactions)
+        print('Ожидается ' + str(count_tran) + ' операций(я)')
+        string_for_copy = ''
+        with open('data_transaction.txt', encoding='UTF=8') as file_transaction:
+            for line in file_transaction:
+                string_for_copy += line
+        with open('data_transaction.txt', 'w', encoding='UTF=8') as file_transaction:
+            file_transaction.write(string_for_copy + '\n' + str(comment) + ' ' + str(expected_amount))
+        return count_tran
+    except ValueError:
+        print()
+        print('Вы вводите буквы, нужно ввести число!! ')
+        print()
 
 def max_limite():
-    limite = int(input('Введите максимально допустимую сумму которая должна быть на счету: '))
-    with open('limit_data.txt', 'w', encoding='UTF-8') as file:
-        file.write('limite ' + str(limite))
-    return limite
-
+    try:
+        limite = int(input('Введите максимально допустимую сумму которая должна быть на счету: '))
+        with open('limit_data.txt', 'w', encoding='UTF-8') as file:
+            file.write('limite ' + str(limite))
+        return limite
+    except ValueError:
+        print()
+        print('Вы вводите буквы, нужно ввести число!! ')
+        print()
 
 
 def ran_transactions(transactions_data, limite):
@@ -229,48 +252,50 @@ def recover_data(password, balance):
 if __name__ == "__main__":
     password, balance, limite = recover_data(password, balance)
     while True:
-        operation = operation_user()
+        try:
+            operation = operation_user()
 
-        if operation == 1:
-                password = create_user()
+            if operation == 1:
+                    password = create_user()
 
-        elif operation == 2:
-            balance = money_up(balance)
-            print()
+            elif operation == 2:
+                balance = money_up(balance)
+                print()
 
-        elif operation == 3:
-            balance = money_to_cash(balance, password)
-            print()
+            elif operation == 3:
+                balance = money_to_cash(balance, password)
+                print()
 
-        elif operation == 4:
-            check_balance(balance, password)
-            print()
+            elif operation == 4:
+                check_balance(balance, password)
+                print()
 
-        elif operation == 5:
-            transaction(transactions_data)
-            print()
+            elif operation == 5:
+                transaction(transactions_data)
+                print()
 
-        elif operation == 6:
-            limite = max_limite()
-            print()
+            elif operation == 6:
+                limite = max_limite()
+                print()
 
-        elif operation == 7:
-            balance += ran_transactions(transactions_data, limite)
-            with open('user_balance.txt', 'w', encoding='UTF=8') as file_user_balance:
-                file_user_balance.write('balance ' + str(balance))
-            print()
+            elif operation == 7:
+                balance += ran_transactions(transactions_data, limite)
+                with open('user_balance.txt', 'w', encoding='UTF=8') as file_user_balance:
+                    file_user_balance.write('balance ' + str(balance))
+                print()
 
-        elif operation == 8:
-            stat_expected_amount(transactions_data)
-            print()
+            elif operation == 8:
+                stat_expected_amount(transactions_data)
+                print()
 
-        elif operation == 9:
-            filter_transaction()
-            print()
+            elif operation == 9:
+                filter_transaction()
+                print()
 
-        elif operation == 10:
-            print('Спасибо за пользование нашей программой, до свидания!')
-            break
-        else:
-            print('Некорректный номер операции, попробуйте снова :(')
-
+            elif operation == 10:
+                print('Спасибо за пользование нашей программой, до свидания!')
+                break
+            else:
+                print('Некорректный номер операции, попробуйте снова :(')
+        except:
+            print("Номер операции нужно указывать цифрами")
